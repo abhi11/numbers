@@ -7,11 +7,12 @@
 
 ### API
 * Endpoint: /numbers
-* URL Params: **u**
-* Usage: http://localhost:8888/numbers?u=http://example.com/primes&u=http://foobar.com/fibo
+* Query Params:
+  - u : <url>
+* Usage: `http://localhost:8888/numbers?u=http://example.com/primes&u=http://foobar.com/fibo`
 * Output:
 ```javascript
 {
-   "numbers" :[1,2,3,5,7,8,]
+   "numbers" :[1,2,3,5,7,8]
 }
 ```
