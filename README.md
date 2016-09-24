@@ -8,7 +8,7 @@
 ### API
 * Endpoint: /numbers
 * Query Params:
-  - u : <url>
+  - u : url
 * Usage: `http://localhost:8888/numbers?u=http://example.com/primes&u=http://foobar.com/fibo`
 * Output:
 ```javascript
