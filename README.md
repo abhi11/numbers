@@ -30,5 +30,12 @@
   - So the time to write the response is independent of the time constraint
   - Time constraint only applies to the main business logic of making the GET calls and sorting result
 
+* The output format expected from the dummy servers(like demo/demo.go) is
+```javascript
+{
+   "numbers" :[1,2,3,5,7,8]
+}
+```
+
 ### Note:
 * The directory demo has the problem statement and dummy server for numbers
