@@ -4,5 +4,5 @@ import "net/http"
 
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("write something"))
+	w.Write([]byte("Hello world !!"))
 }

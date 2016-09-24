@@ -14,7 +14,7 @@ type Number struct {
 	Numbers []int `json:"numbers"`
 }
 
-// controller to fetch all urls and give a sorted result
+// Handler to fetch all urls and give a sorted result
 // Does processing parallely, GET calss and sorting happens parallely
 func SortNumbers(w http.ResponseWriter, r *http.Request) {
 	s := set.NewSet()
@@ -32,19 +32,22 @@ func SortNumbers(w http.ResponseWriter, r *http.Request) {
 	vals = util.GetValidURLs(vals)
 	log.Println("Valid URLs: ", vals)
 
-	// declare channel and wait group, timer
+	// declare channels, wait group, and timer
 	var wg sync.WaitGroup
 	num := make(chan []int)
 	doneWait := make(chan bool)
 	doneSort := make(chan bool)
 	tick := time.NewTimer(500 * time.Millisecond)
 
+	// parallely fetch numbers
 	for _, v := range vals {
 		wg.Add(1)
 		go getNumbers(v, num, &wg)
 	}
-
+	// wait to get the numbers
 	go wait(&wg, doneWait)
+
+	// sort numbers
 	go sortNums(num, s, doneSort)
 
 	// wait for the sorting to take place;
@@ -73,7 +76,7 @@ func SortNumbers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	/* Write numbers */
-	n.Numbers = s.Sort()
+	n.Numbers = s.Set()
 	data, _ := util.ToJSONBytes(n)
 	util.WriteResponse(w, http.StatusOK, data)
 }
@@ -102,8 +105,9 @@ func getNumbers(u string, num chan []int, w *sync.WaitGroup) {
 func sortNums(num chan []int, s *set.Set, d chan bool) {
 	for {
 		numFromChan, more := <-num
-		if more {
+		if more { // Add to set and sort
 			s.AddList(numFromChan)
+			s.Sort()
 			continue
 		}
 		// else break

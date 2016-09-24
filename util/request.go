@@ -16,7 +16,7 @@ func HttpGet(url string) (*http.Response, error) {
 }
 
 // Reads the response body and closes it. Then returns remaining Response object
-// In case of errors, return errors, and response(could be nil in err cases)
+// In case of errors, returns errors, and response(could be nil in err cases)
 func HttpGetAndRead(url string, v interface{}) (*http.Response, error) {
 	resp, err := HttpGet(url)
 	if err != nil {
@@ -39,10 +39,12 @@ func GetParamValues(r *http.Request, key string) []string {
 }
 
 // Checks if URL is valid
-// Make it better add checks for ://
+// Does the basic checkings, this makes the url selection faster
+// As hitting the URLs are parallel virtually no time is wasted while
+// calling an invalid url
 func IsValidURL(str string) bool {
 	length := len(str)
-	if str == "" || length >= 2083 || length <= 3 || strings.HasPrefix(str, ".") || !strings.HasPrefix(str, "http") {
+	if str == "" || length >= 2083 || strings.HasPrefix(str, ".") || !strings.HasPrefix(str, "http") {
 		return false
 	}
 
@@ -52,6 +54,10 @@ func IsValidURL(str string) bool {
 	}
 
 	if strings.HasPrefix(u.Host, ".") {
+		return false
+	}
+
+	if u.Host == "" && (u.Path != "" && !strings.Contains(u.Path, ".")) {
 		return false
 	}
 
